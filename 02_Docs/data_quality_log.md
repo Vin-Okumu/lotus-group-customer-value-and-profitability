@@ -378,3 +378,103 @@ Summary of categorical quality findings:
 
 
 Importantly, we are not cleaning anything yet. We are documenting the issues so that our eventual cleaning decisions are deliberate and reproducible.
+
+# Product Category and Subcategory Consistency
+
+The relationship between product categories and subcategories was investigated to identify potential classification inconsistencies.
+
+The dataset contains:
+
+- 2 parent categories: Clothing and Electronics.
+
+- 15 distinct subcategories.
+
+- 345 products.
+
+All six Clothing subcategories belong exclusively to Clothing, while all nine Electronics subcategories belong exclusively to Electronics.
+
+The similarly named subcategories `Accessories` and `Accessories & Storage` were confirmed to belong to different parent categories and therefore represent legitimate classifications.
+
+**Data Quality Decision:** No corrections are necessary. The existing category-subcategory hierarchy will be retained.
+
+# Investigating Geographical Consistency
+
+The geographical classifications in the customer and store tables were examined to establish whether cities consistently map to their respective regions.
+
+Findings:
+
+- 13 distinct cities were identified in both tables.
+
+- 7 distinct regions were represented.
+
+- Every city mapped to exactly one region.
+
+- Customer and store tables contained identical city-region combinations.
+
+- No conflicting geographical classifications were identified.
+
+**Data Quality Decision:** The geographical classifications are internally consistent across both tables. No corrections are necessary.
+
+# Numerical Data Quality Assessment
+
+All seven numerical fields contain complete, positive values, except that zero discounts are present—which is perfectly legitimate.
+
+However, descriptive statistics alone cannot establish whether the transaction calculations are correct. We now need to test the mathematical relationships between these fields.
+
+## 1. Interpretation of our results
+
+|Field	|Minimum	|Maximum	|Initial assessment|
+|---|---:|---:|---|
+|Quantity	|1	|4	|No zero or negative quantities|
+|Unit price	|80	|18,600	|No zero or negative prices|
+|Discount (%)	|0	|30	|Within a plausible range|
+|Selling price	|56	|18,600	|No zero or negative prices|
+|Unit cost	|40	|14,900	|No zero or negative costs|
+|Line revenue	|56	|74,400	|No zero or negative revenue|
+|Line cost	|40	|59,600	|No zero or negative costs|
+
+
+A few observations:
+
+- All 25,099 order-detail records are complete across these fields.
+
+- Approximately 38% of records have no discount. This is not a data-quality problem.
+
+- The maximum discount is 30%, which is reasonable, although we will verify the calculations.
+
+- The maximum unit price is substantially higher than the median. 
+    - This may reflect expensive electronics products, so we shouldn't automatically classify it as an outlier.
+
+# Validating Transaction Calculations
+
+**Assessment**: Transaction arithmetic consistency
+
+The 25,099 records in `tbl_order_details` were assessed to establish whether selling prices, line-level revenue, and line-level costs were mathematically consistent.
+
+Three validation rules were applied:
+
+1. Expected selling price = Unit price × (1 − Discount percentage / 100).
+
+2. Expected line revenue = Quantity × Selling price.
+
+3. Expected line cost = Quantity × Unit cost.
+
+**Findings:** All three validations returned zero mismatches.
+
+**Conclusion:** The transaction-level financial calculations are internally consistent. No corrective action is currently required.
+
+# Reconciling Order Details Against Order-level Financial Records
+
+**Assessment**: Order-level versus transaction-level financial reconciliation.
+
+The 12,000 records in the consolidated orders table were reconciled against aggregated financial values from the 25,099 order-detail records.
+
+**Findings:**
+
+- Revenue mismatches: 0.
+
+- Cost mismatches: 0.
+
+- Orders without corresponding order details: 0.
+
+**Conclusion:** Every order has corresponding transaction-level records, and both recorded revenue and cost agree with the sum of their respective product-line values. No corrective action is required.
