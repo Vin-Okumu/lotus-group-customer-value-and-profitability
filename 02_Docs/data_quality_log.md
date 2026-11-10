@@ -210,3 +210,85 @@ We need to investigate both before proceeding.
 |Orders 2022–2023	|None identified	|7,942 unique, non-null order IDs	|No primary-key issue identified	|Passed|
 |Orders 2024	|None identified	|4,058 unique, non-null order IDs	|No primary-key issue identified	|Passed|
 |Returns	|None identified	|1,056 unique, non-null return IDs	|No primary-key issue identified	|Passed|
+
+
+# Foreign Key Integrity Assessment
+
+## 1. Combined order table: Passed
+
+|Check	|Result	|Interpretation|
+|---|---:|---|
+|Total order records	|12,000	|Both order tables combined successfully|
+|Distinct order IDs	|12,000	|Every order has a unique identifier|
+|Null order IDs	|0	|No orders are missing their identifier|
+|Repeated order IDs	|0	|No overlap between the two source tables|
+
+
+Conclusion: We can safely treat the combined orders DataFrame as our consolidated order table. There is no evidence of duplicate order IDs across the two source periods.
+
+## 2. Foreign-key integrity: passed, with one exception
+
+|Relationship	|Missing foreign keys	|Unmatched records	|Result|
+|---|---:|---:|---|
+|Orders → Customers	|0	|0	|Pass|
+|Orders → Stores	|0	|0	|Pass|
+|Orders → Employees	|632	|0	|Partial|
+|Orders → Date	|0	|0	|Pass|
+|Employees → Stores	|0	|0	|Pass|
+|Order Details → Orders	|0	|0	|Pass|
+|Order Details → Products	|0	|0	|Pass|
+|Returns → Orders	|0	|0	|Pass|
+
+
+What this tells us:
+
+- **Customer relationship**: Every order references an existing customer. This is particularly important because customer behavior is the central focus of the project.
+
+- **Store relationship**: Every order references a valid store.
+
+- **Employee relationship**: 632 orders have no employee ID, representing approximately 5.27% of all orders. However, none of the populated employee IDs points to a nonexistent employee.
+
+- **Date relationship**: Every order references an existing date record.
+
+- **Order details**: Every order-detail record references a valid order and product.
+
+- **Returns**: Every return references an existing order.
+
+The missing employee IDs should not cause us to discard those orders. Employee information is not essential to the customer-level classification and regression targets we intend to construct.
+
+Preliminary decision: Retain all 632 records, preserve the missing employee IDs, and document the issue. We can investigate whether the missing assignments have any meaningful relationship with store, date, or order status later if necessary.
+
+## 3. Summary
+
+### 3. Referential Integrity Assessment
+
+**Combined Orders Table**
+
+The two order tables were successfully consolidated into a single dataset containing 12,000 records. All 12,000 order IDs were distinct, with no null or repeated identifiers. This confirms that the two source tables do not contain overlapping order IDs.
+
+**Foreign-Key Validation**
+
+Eight foreign-key relationships were assessed across the dataset. Seven relationships passed without missing or unmatched references. These included:
+
+- Orders to Customers
+
+- Orders to Stores
+
+- Orders to Date
+
+- Employees to Stores
+
+- Order Details to Orders
+
+- Order Details to Products
+
+- Returns to Orders
+
+The Orders-to-Employees relationship contained 632 missing employee IDs out of 12,000 orders (approximately 5.27%). However, no populated employee ID referenced a nonexistent employee record.
+
+**Data Quality Decision**
+
+All 632 orders with missing employee assignments will be retained. Employee assignment is not required for the primary customer behavior analysis, and deleting these records would unnecessarily reduce the available purchasing history.
+
+Overall, the dataset demonstrates strong referential integrity, with missing employee assignments identified as the only issue in the relationships assessed so far.
+
