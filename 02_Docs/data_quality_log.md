@@ -292,3 +292,42 @@ All 632 orders with missing employee assignments will be retained. Employee assi
 
 Overall, the dataset demonstrates strong referential integrity, with missing employee assignments identified as the only issue in the relationships assessed so far.
 
+# Investigating Transaction Dates
+
+All 12,000 orders have valid dates, and every transaction's `order_date` agrees with the corresponding `full_date` in the date dimension.
+
+## 1. Interpretation
+
+|Validation check	|Result	|Assessment|
+|---|---:|---|
+|Total orders	|12,000	|—|
+|Unparseable order dates	|0	|Pass|
+|Unparseable dimension dates	|0	|Pass|
+|Matching dates	|12,000	|Pass|
+|Mismatching dates	|0	|Pass|
+
+
+**Why this matters**: Our future analysis will depend heavily on time. We'll use historical transaction dates to calculate customer purchase frequency, recency, spending patterns, and eventually construct 90-day prediction targets.
+
+- If the order dates disagreed with the date dimension, our time-based analysis could become unreliable. Fortunately, there are no inconsistencies.
+
+## 2. Summary
+
+### Transaction Date Validation
+
+The `order_date` field in the consolidated orders table was validated against the `full_date` field in the date dimension using `date_id` as the joining key.
+
+Results:
+
+- Total orders assessed: 12,000
+
+- Unparseable order dates: 0
+
+- Unparseable date dimension values: 0
+
+- Matching dates: 12,000
+
+- Mismatching dates: 0
+
+**Data Quality Decision:** All transaction dates are valid and consistent with the date dimension. No corrections are required.
+
