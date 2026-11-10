@@ -364,3 +364,17 @@ Results:
 - Chronologically valid returns: 1,056
 
 **Data Quality Decision**: All return dates are valid and occur on or after their corresponding order dates. No corrections are required.
+
+# Investigating Categorical Variables
+
+Summary of categorical quality findings:
+
+|Table	|Column	|Issue	|Preliminary action|
+|---|---|---|---|
+|Customers	|gender	|Inconsistent capitalization	|Standardize case|
+|Products	|subcategory	|Potentially overlapping categories	|Investigate|
+|Orders	|payment_method	|Leading spaces	|Trim whitespace|
+|Other categorical fields	|Various	|No obvious issues	|Retain pending further validation|
+
+
+Importantly, we are not cleaning anything yet. We are documenting the issues so that our eventual cleaning decisions are deliberate and reproducible.
