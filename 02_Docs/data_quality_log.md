@@ -331,3 +331,36 @@ Results:
 
 **Data Quality Decision:** All transaction dates are valid and consistent with the date dimension. No corrections are required.
 
+# Return Date Validation
+
+All 1,056 return records have valid, interpretable dates, and none occurs before its corresponding order date.
+
+## 1. Interpretation
+
+|Validation check	|Result	|Assessment|
+|---|---|---|
+|Total return records	|1,056	|—|
+|Unparseable return dates	|0	|Pass|
+|Returns before order date	|0	|Pass|
+|Chronologically valid returns	|1,056	|Pass|
+
+
+This is important because returns will influence how we interpret customer spending. For example, a customer who purchases frequently but also returns a substantial proportion of their purchases may have a different value to the business than gross sales figures suggest.
+
+We have not yet established whether the return amounts reconcile with the original transactions. That will be a separate assessment.
+
+## Summary
+
+The `return_date` field was assessed for interpretability and chronological consistency against the original order dates.
+
+Results:
+
+- Total return records assessed: 1,056
+
+- Unparseable return dates: 0
+
+- Returns occurring before the original order date: 0
+
+- Chronologically valid returns: 1,056
+
+**Data Quality Decision**: All return dates are valid and occur on or after their corresponding order dates. No corrections are required.
