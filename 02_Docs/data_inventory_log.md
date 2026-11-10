@@ -26,7 +26,6 @@ Here is the consolidated inventory:
 |Orders 2022–2023	|7,942	|10	|Historical transaction records|
 |Orders 2024	|4,058	|10	|Recent transaction records|
 |Returns	|1,056	|7	|Product return information|
-|Total	|42,885	|94	|Nine tables|
 
 
 A few observations:
