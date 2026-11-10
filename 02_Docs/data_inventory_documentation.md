@@ -157,13 +157,13 @@ Both tables have identical structures, which is encouraging.
 
 The main areas requiring attention are:
 
-- order_date is stored as a string.
+- `order_date` is stored as a string.
 
-- store_id is stored as an integer.
+- `store_id` is stored as an integer.
 
-- date_id is stored as an integer.
+- `date_id` is stored as an integer.
 
-- total_revenue and total_cost are floating-point numbers.
+- `total_revenue` and `total_cost` are floating-point numbers.
 
 The monetary columns have appropriate numerical representations, although we still need to establish their underlying business definitions.
 
