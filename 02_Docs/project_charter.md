@@ -9,17 +9,17 @@ Project Understanding and Problem Definition
 
 # Project Context
 
-Lotus Group is a retail business operating across Egypt and that its dataset contains customer, transaction, product, store, employee, date and returns information.
+Lotus Group is a retail business operating across Egypt and available dataset contains customer, transaction, product, store, employee, date and returns information.
 
 The key change from our earlier Power BI project is the analytical focus.
 
 **Previous project:** *Business intelligence*
 
-- Understand historical performance through descriptive analysis, KPIs and interactive dashboards.
+- Helped us understand historical performance through descriptive analysis, KPIs and interactive dashboards.
 
 **Current project:** *Customer analytics and machine learning*
 
-- Understand historical purchasing behavior, identify meaningful customer patterns, and develop models to predict future customer outcomes.
+- We want to understand historical purchasing behavior, identify meaningful customer patterns, and develop models to predict future customer outcomes.
 
 
 > What we already have, *descriptive analysis*, explains what has happened, whereas 
@@ -34,7 +34,7 @@ The analytical challenge is to transform these raw, potentially inconsistent dat
 
 The project will investigate whether historical customer behavior can be used to predict repeat purchasing and future customer spending, providing insights that could support customer retention, marketing prioritization and revenue planning.
 
-Because the dataset is synthetic, the findings will demonstrate analytical methods and potential business applications rather than establish facts about actual retail customers in Egypt.
+Because the dataset is synthetic, the findings ware only intended to demonstrate analytical methods and potential business applications rather than establish facts about actual retail customers in Egypt.
 
 ### General Objective
 

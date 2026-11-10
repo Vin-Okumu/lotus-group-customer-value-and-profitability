@@ -10,8 +10,6 @@ The analytical challenge is to transform these raw, potentially inconsistent dat
 
 The project will investigate whether historical customer behavior can be used to predict repeat purchasing and future customer spending, providing insights that could support customer retention, marketing prioritization and revenue planning.
 
-Because the dataset is synthetic, the findings will demonstrate analytical methods and potential business applications rather than establish facts about actual retail customers in Egypt.
-
 # Repository Structure
 ```
 lotus-group-customer-behavior-analysis
