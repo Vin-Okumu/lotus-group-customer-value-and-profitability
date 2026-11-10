@@ -122,4 +122,91 @@ We must resolve customer identity before constructing customer-level features.
 |Customers	|Fully duplicated records	|50 records	|Could inflate customer counts and distort analysis	|Requires investigation|
 |Other six tables	|No full-row duplicates detected	|0 duplicates in each	|No full-row duplication identified	|Preliminary check complete|
 
+# Primary Key Integrity Assessment
 
+## 1. Customers table: Confirmed duplication
+
+Our results show:
+
+|Metric	|Result|
+|---|---:|
+|Total records	|3,050|
+|Distinct customer IDs	|3,000|
+|Missing customer IDs	|0|
+|Duplicate customer ID records	|50|
+|Fully duplicated records	|50|
+
+The duplicated customer ID investigation returned 100 rows.
+
+This tells us something important.
+
+- There are 50 customer IDs appearing twice each, and the corresponding records are identical.
+
+The same pattern applies to the other duplicated IDs.
+
+What does this mean?
+
+We have established that:
+
+1. There are 3,050 customer records.
+
+2. There are 3,000 distinct customer identifiers.
+
+3. Fifty customer records are additional copies of existing records.
+
+4. We have no evidence of conflicting customer attributes among the duplicated IDs displayed.
+
+This is a relatively straightforward duplication problem.
+
+- Our preliminary cleaning decision: Remove the 50 exact duplicate records during the data cleaning phase, retaining one occurrence of each customer record.
+
+We are not doing this just yet. We are still assessing the raw data.
+
+After deduplication, we would expect the customers table to contain 3,000 records, assuming no other issues emerge.
+
+This will also give us a reliable starting point for customer-level analysis.
+
+## 2. Primary-key assessment across all tables
+
+Let's consolidate our results.
+
+|Table	|Primary key	|Records	|Distinct keys	|Duplicate keys	|Assessment|
+|---|---|---:|---:|---:|---|
+|Customers	|`customer_id`	|3,050	|3,000	|50	|Failed|
+|Date	|`date_id`	|1,096	|1,096	|0	|Passed|
+|Employees	|`employee_id`	|216	|216	|0	|Passed|
+|Products	|`product_id`	|345	|345	|0	|Passed|
+|Stores	|`store_id`	|15	|15	|0	|Passed|
+|Order details	|`detail_id`	|25,099	|25,099	|0	|Passed|
+|Orders 2022–2023	|`order_id`	|7,942	|7,942	|0	|Passed|
+|Orders 2024	|`order_id`	|4,058	|4,058	|0	|Passed|
+|Returns	|`return_id`	|1,056	|1,056	|0	|Passed|
+
+
+* Interpretation: The results are encouraging.
+
+    - All tables except customers have unique, non-null candidate primary keys within their respective tables.
+
+This means their expected grain has passed its initial uniqueness test.
+
+However, there are two important distinctions.
+
+* First: The two order tables have passed their individual checks, but we haven't established whether their order IDs overlap across tables.
+
+* Second: A unique primary key does not automatically establish that the records are valid or that their foreign-key relationships are intact.
+
+We need to investigate both before proceeding.
+
+## 3. Summary
+
+|Table	|Issue	|Evidence	|Potential impact	|Status|
+|---|---|---|---|---|
+|Customers	|Duplicate customer records	|50 additional records; 3,000 distinct IDs across 3,050 rows	|Inflated customer counts and potentially distorted customer-level analysis	|Confirmed|
+|Date	|None identified	|1,096 unique, non-null date IDs	|No primary-key issue identified	|Passed|
+|Employees	|None identified	|216 unique, non-null employee IDs	|No primary-key issue identified	|Passed|
+|Products	|None identified	|345 unique, non-null product IDs	|No primary-key issue identified	|Passed|
+|Stores	|None identified	|15 unique, non-null store IDs	|No primary-key issue identified	|Passed|
+|Order details	|None identified	|25,099 unique, non-null detail IDs	|No primary-key issue identified	|Passed|
+|Orders 2022–2023	|None identified	|7,942 unique, non-null order IDs	|No primary-key issue identified	|Passed|
+|Orders 2024	|None identified	|4,058 unique, non-null order IDs	|No primary-key issue identified	|Passed|
+|Returns	|None identified	|1,056 unique, non-null return IDs	|No primary-key issue identified	|Passed|
