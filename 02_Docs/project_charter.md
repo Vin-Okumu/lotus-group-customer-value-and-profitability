@@ -38,7 +38,7 @@ Because the dataset is synthetic, the findings ware only intended to demonstrate
 
 ### General Objective
 
-To analyze customer purchasing behavior and develop classification and regression models that predict future purchasing activity and customer spending using Lotus Group's historical retail data.
+* To analyze customer purchasing behavior and develop classification and regression models that predict future purchasing activity and customer spending using Lotus Group's historical retail data.
 
 ### Specific Objectives
 
