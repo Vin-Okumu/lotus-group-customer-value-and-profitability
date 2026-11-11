@@ -478,3 +478,117 @@ The 12,000 records in the consolidated orders table were reconciled against aggr
 - Orders without corresponding order details: 0.
 
 **Conclusion:** Every order has corresponding transaction-level records, and both recorded revenue and cost agree with the sum of their respective product-line values. No corrective action is required.
+
+# Order Status Investigation
+
+## 1. Order status findings
+
+|Order status	|Orders	|Total revenue (EGP)|
+|---|---:|---:|
+|Completed	|10,442	|39,652,714.00|
+|Returned	|1,063	|4,020,337.50|
+|Cancelled	|495	|1,677,927.50|
+|Total	|12,000	|45,350,979.00|
+
+The concerning finding is that cancelled orders have recorded revenue of EGP 1.68 million.
+
+This doesn't necessarily mean the data is wrong. It means that total_revenue records the order's financial value, not necessarily money actually received by the business.
+
+For our project, cancelled orders should not count as qualifying purchases.
+
+## 2. Return findings
+
+|Return status	|Returns	|Return amount (EGP)|
+|---|---|---|
+|Refunded	|819	|3,206,996.50|
+|Pending	|150	|402,529.50|
+|Rejected	|87	|403,586.50|
+|Total	|1,056	|4,013,112.50|
+
+
+We can distinguish three situations:
+
+- Refunded: Money was returned to customers.
+
+- Pending: Refund has not yet been completed.
+
+- Rejected: Refund was not approved.
+
+This distinction matters when calculating actual customer spending.
+
+## 3. Preliminary rules for our predictive models
+
+Proposed way forward
+
+|Situation	|Classification target	|Regression target|
+|---|---|---|
+|Completed order	|Qualifying purchase	|Include revenue|
+|Cancelled order	|Not a qualifying purchase	|Exclude revenue|
+|Returned order	|Requires return treatment	|Deduct qualifying refunds|
+|Pending return	|Purchase initially qualifies	|Don't deduct until refunded|
+|Rejected return	|Purchase initially qualifies	|Don't deduct|
+
+
+These are preliminary rules. We need one more small investigation before finalizing them.
+
+# Checking Whether Rreturn Records Correspond to Returned Orders
+
+**Assessment:** Consistency between order statuses and return records.
+
+Of the 1,063 orders marked as Returned, 1,056 have corresponding return records, while seven have no matching return record.
+
+No Completed orders were found with associated return records.
+
+**Conclusion:** Order and return records are generally consistent. Seven returned orders require attention because their corresponding return details are unavailable. These records will be flagged rather than assigned assumed refund amounts.
+
+## Proposed way forward
+
+Our preliminary transaction treatment is that for the predictive project, we'll use these principles:
+
+|Order status	|Treatment|
+|---|---|
+|Completed	|Eligible purchase|
+|Cancelled	|Exclude|
+|Returned	|Exclude from qualifying purchases, subject to final return treatment|
+
+
+For regression, we'll want to calculate spending using completed purchases, less successfully refunded amounts where applicable. We don't want to deduct pending or rejected refunds.
+
+One important distinction: the seven returned orders without return records will require special handling because we cannot establish their actual refund amounts.
+
+# Customer Dates Validation
+
+**Assessment:** Customer birth-date and registration-date validity.
+
+The customer date fields were assessed for parsing errors and chronological inconsistencies.
+
+**Findings:**
+
+- Invalid birth dates: 567 (approximately 18.6%).
+
+- Invalid registration dates: 0.
+
+- Birth dates after registration dates: 0.
+
+- Registration dates after the final transaction date: 0.
+
+**Conclusion:** Registration dates are suitable for customer-tenure calculations. Invalid birth dates will be converted to missing values during cleaning rather than estimated or artificially reconstructed.
+
+# Data Quality Assessment Summary
+
+We've now completed the checks necessary to establish whether our data is suitable for the intended analysis.
+
+Our key findings include:
+
+|Issue	|Finding	|Planned treatment|
+|Duplicate customers	|50 duplicated records	|Remove exact duplicates, retaining one record per customer.|
+|Missing customer emails	|382	|Retain missing values.|
+|Missing employee IDs	|632 orders	|Retain; not essential for customer modelling.|
+|Inconsistent gender capitalization	|Identified	|Standardize categories.|
+|Whitespace in payment methods	|Identified	|Remove leading/trailing whitespace.|
+|Invalid birth dates	|567	|Convert to missing values.|
+|Missing return records	|7 returned orders	|Flag for special handling.|
+|Transaction arithmetic	|No mismatches	|No correction required.|
+|Order-level financial reconciliation	|No mismatches	|No correction required.|
+|Foreign-key integrity	|No unmatched populated keys	|No correction required.|
+|Date consistency	|No mismatches	|No correction required.|
