@@ -31,9 +31,9 @@
 
 ## 1. The problem
 
-> *"We run 15 stores across Egypt and have three years of customer, order and returns data. We'd like to know which customers are likely to buy again in the next three months and how much they'll spend, so we can focus our retention budget and plan revenue. Can our data actually tell us that?"*
+> *"Client runs 15 stores across Egypt and has three years of customer, order and returns data. They'd like to know which customers are likely to buy again in the next three months and how much they'll spend, so client can focus our retention budget and plan revenue. But the question is: Can the data actually tell the client that?"*
 
-This is a follow-on to the [Lotus Group Retail Analytics](https://github.com/Vin-Okumu/lotus-group-retail-analytics) Power BI project. That project explained **what happened**. This one asks **what will happen next**.
+This is a follow-on to the [Lotus Group Retail Analytics](https://github.com/Vin-Okumu/lotus-group-retail-analytics) Power BI project. That project explained **what happened**. This one asks **what would happen nex?**.
 
 ---
 
