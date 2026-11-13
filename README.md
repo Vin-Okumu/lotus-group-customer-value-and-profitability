@@ -1,7 +1,7 @@
 <h1 align="center">Lotus Group Customer Behavior Analysis</h1>
 
 <p align="center">
-<img src="05_Images/cover.png" width="1000" alt="Lotus Group Retail: Customer Behavior machine learning portfolio project">
+<img src="04_Images/cover.png" width="1000" alt="Lotus Group Retail: Customer Behavior machine learning portfolio project">
 </p>
 
 <p align="center">
