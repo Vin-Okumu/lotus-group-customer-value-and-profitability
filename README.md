@@ -1,7 +1,7 @@
 <h1 align="center">Lotus Group Customer Behavior Analysis</h1>
 
 <p align="center">
-<img src="04_Images/cover.png" width="1000" alt="Lotus Group Retail: Customer Behavior machine learning portfolio project">
+<img src="04_Output/cover.png" width="1000" alt="Lotus Group Retail: Customer Behavior machine learning portfolio project">
 </p>
 
 <p align="center">
@@ -82,7 +82,7 @@ Data inventory → Quality audit → Cleaning → Exploratory analysis → Featu
 A simple *active customers × average spend per customer* forecast, built only on 2022–2023 data, predicted 2024 quarterly revenue to within **0.1%, 4.3% and 5.6%**. For budgeting and stock planning, this is the number that matters.
 
 <p align="center">
-<img src="04_Images/revenue_forecast_vs_actual.png" width="800" alt="Quarterly revenue forecast vs actual for 2024">
+<img src="04_Output/figures/revenue_forecast_vs_actual.png" width="800" alt="Quarterly revenue forecast vs actual for 2024">
 </p>
 
 ### Finding 2: Purchase history does not predict *which* customers will buy
@@ -90,7 +90,7 @@ A simple *active customers × average spend per customer* forecast, built only o
 About **25% of customers buy in any 90-day window**, and that rate is the same in every segment. Customers with 4+ orders last year buy at the same rate as those with none. Platinum members buy at the same rate as Bronze.
 
 <p align="center">
-<img src="04_Images/purchase_rate_by_segment.png" width="950" alt="Future purchase rate is flat across activity levels and loyalty tiers">
+<img src="04_Output/figures/purchase_rate_by_segment.png" width="950" alt="Future purchase rate is flat across activity levels and loyalty tiers">
 </p>
 
 ### Finding 3: No model beat the simple baselines, and the diagnostics show why
@@ -102,7 +102,7 @@ About **25% of customers buy in any 90-day window**, and that rate is the same i
 | How much will the customer spend? | Gradient Boosting | R² **≈ 0**; MAE EGP 1,795 vs EGP 1,107 for "predict zero" | Learns the average, nothing more |
 
 <p align="center">
-<img src="04_Images/model_evaluation_roc_deciles.png" width="950" alt="ROC curve on the diagonal and flat purchase rate across score deciles">
+<img src="04_Output/figures/model_evaluation_roc_deciles.png" width="950" alt="ROC curve on the diagonal and flat purchase rate across score deciles">
 </p>
 
 Three diagnostic tests confirmed that this is a property of the data, not a bug:
