@@ -63,9 +63,9 @@ Every decision is recorded in the [data quality log](02_Docs/data_quality_log.md
 Data inventory → Quality audit → Cleaning → Exploratory analysis → Feature engineering → Time-based modelling → Diagnostics → Recommendations
 ```
 
-1. **Audit and clean** the nine tables: keys, duplicates, data types, dates and order-status rules. → [`01`](03_Notebooks/01_data_inventory.ipynb) · [`02`](03_Notebooks/02_data_cleaning.ipynb)
-2. **Explore customer behaviour**: purchase frequency, spending, product preferences, seasonality and returns. → [`03`](03_Notebooks/03_exploratory_data_analysis.ipynb)
-3. **Build customer snapshots without leakage.** Customers were captured at 11 quarter-end dates. Each snapshot's features (RFM, recent 90/180/365-day activity, returns and cancellations, tenure, age, loyalty tier, city) use **only data available on that date**. The targets come from the following 90 days. → [`04`](03_Notebooks/04_machine_learning.ipynb)
+1. **Audit and clean** the nine tables: keys, duplicates, data types, dates and order-status rules. → [`data inventory`](03_Notebooks/01_data_inventory.ipynb) · [`dat cleaning`](03_Notebooks/02_data_cleaning.ipynb)
+2. **Explore customer behaviour**: purchase frequency, spending, product preferences, seasonality and returns. → [`EDA`](03_Notebooks/03_exploratory_data_analysis.ipynb)
+3. **Build customer snapshots without leakage.** Customers were captured at 11 quarter-end dates. Each snapshot's features (RFM, recent 90/180/365-day activity, returns and cancellations, tenure, age, loyalty tier, city) use **only data available on that date**. The targets come from the following 90 days. → [`ML`](03_Notebooks/04_machine_learning.ipynb)
 4. **Validate the way the model would actually be used**: train on 2022–2023, choose models and thresholds on late 2023, then test **once** on 2024.
 5. **Benchmark every model against simple rules**: "nobody buys", "contact whoever bought most recently", "predict the average" and "predict zero".
 6. **Model**: Logistic Regression, Random Forest and Gradient Boosting for *will they buy?*; Ridge, Random Forest and Gradient Boosting for *how much?*
@@ -82,7 +82,7 @@ Data inventory → Quality audit → Cleaning → Exploratory analysis → Featu
 A simple *active customers × average spend per customer* forecast, built only on 2022–2023 data, predicted 2024 quarterly revenue to within **0.1%, 4.3% and 5.6%**. For budgeting and stock planning, this is the number that matters.
 
 <p align="center">
-<img src="05_Images/revenue_forecast_vs_actual.png" width="800" alt="Quarterly revenue forecast vs actual for 2024">
+<img src="04_Images/revenue_forecast_vs_actual.png" width="800" alt="Quarterly revenue forecast vs actual for 2024">
 </p>
 
 ### Finding 2: Purchase history does not predict *which* customers will buy
@@ -90,7 +90,7 @@ A simple *active customers × average spend per customer* forecast, built only o
 About **25% of customers buy in any 90-day window**, and that rate is the same in every segment. Customers with 4+ orders last year buy at the same rate as those with none. Platinum members buy at the same rate as Bronze.
 
 <p align="center">
-<img src="05_Images/purchase_rate_by_segment.png" width="950" alt="Future purchase rate is flat across activity levels and loyalty tiers">
+<img src="04_Images/purchase_rate_by_segment.png" width="950" alt="Future purchase rate is flat across activity levels and loyalty tiers">
 </p>
 
 ### Finding 3: No model beat the simple baselines, and the diagnostics show why
@@ -102,7 +102,7 @@ About **25% of customers buy in any 90-day window**, and that rate is the same i
 | How much will the customer spend? | Gradient Boosting | R² **≈ 0**; MAE EGP 1,795 vs EGP 1,107 for "predict zero" | Learns the average, nothing more |
 
 <p align="center">
-<img src="05_Images/model_evaluation_roc_deciles.png" width="950" alt="ROC curve on the diagonal and flat purchase rate across score deciles">
+<img src="04_Images/model_evaluation_roc_deciles.png" width="950" alt="ROC curve on the diagonal and flat purchase rate across score deciles">
 </p>
 
 Three diagnostic tests confirmed that this is a property of the data, not a bug:
