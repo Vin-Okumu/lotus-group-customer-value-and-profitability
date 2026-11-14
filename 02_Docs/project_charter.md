@@ -1,5 +1,9 @@
 <h1 align = "Center">
-Lotus Group Customer Behavior Analysis
+Lotus Group Customer Value & Profitability Analysis
+
+<h3 align = "Center">
+Who drives Lotus Group's profit, and where are discounts eroding it?
+</h3>
 
 <h3 align = "Center">
 Project Understanding and Problem Definition
@@ -9,7 +13,7 @@ Project Understanding and Problem Definition
 
 # Project Context
 
-Lotus Group is a retail business operating across Egypt and available dataset contains customer, transaction, product, store, employee, date and returns information.
+Lotus Group is a retail business operating across Egypt. The available dataset contains customer, transaction, product, store, employee, date and returns information.
 
 The key change from our earlier Power BI project is the analytical focus.
 
@@ -17,124 +21,122 @@ The key change from our earlier Power BI project is the analytical focus.
 
 - Helped us understand historical performance through descriptive analysis, KPIs and interactive dashboards.
 
-**Current project:** *Customer analytics and machine learning*
+**Current project:** *Customer value and profitability analytics with machine learning*
 
-- We want to understand historical purchasing behavior, identify meaningful customer patterns, and develop models to predict future customer outcomes.
+- We want to understand which customers create the most value, how pricing and discounts affect profit, and use machine learning to turn these patterns into customer segments and practical discount rules.
 
+> Our earlier dashboards showed *how much* the business sold, whereas
 
-> What we already have, *descriptive analysis*, explains what has happened, whereas 
-
-> What we are doing now, *predictive modeling*, uses information available at a given point in time to estimate what may happen next.
+> This project explains *who* and *what* makes that revenue profitable, and *where* profit is being lost.
 
 ## Business Problem Statement
 
-Lotus Group operates across multiple retail locations in Egypt and maintains data on customers, transactions, products, stores and product returns. Although these records provide information about historical business activity, the business needs a more structured understanding of its customers' purchasing behavior and future value.
+> *"We've grown to 15 stores and EGP 40M in completed sales, but we don't know which customers really drive our business or whether our discounts are paying off. We need to know who to prioritise, and which discounts we should stop."*
 
-The analytical challenge is to transform these raw, potentially inconsistent datasets into a reliable customer-level analytical dataset that can reveal purchasing patterns and support predictive modeling.
+Lotus Group keeps detailed records of its customers, orders, products, costs and returns. These records describe what was sold, but the business lacks a structured view of where its value and profit come from.
 
-The project will investigate whether historical customer behavior can be used to predict repeat purchasing and future customer spending, providing insights that could support customer retention, marketing prioritization and revenue planning.
+The analytical challenge is to turn these raw, potentially inconsistent datasets into reliable customer-level and order-level tables. From these we can measure how concentrated revenue and profit are, group customers by value, and identify the basket and discount combinations that lead to loss-making sales.
 
-Because the dataset is synthetic, the findings ware only intended to demonstrate analytical methods and potential business applications rather than establish facts about actual retail customers in Egypt.
+The findings should support customer prioritisation, marketing investment and discount policy.
+
+Because the dataset is synthetic, the findings are only intended to demonstrate analytical methods and potential business applications, not to establish facts about actual retail customers in Egypt.
 
 ### General Objective
 
-* To analyze customer purchasing behavior and develop classification and regression models that predict future purchasing activity and customer spending using Lotus Group's historical retail data.
+* To identify the customer groups and pricing practices that create or destroy profit at Lotus Group, and to turn them into practical rules for marketing and discounting.
 
 ### Specific Objectives
 
-1. Assess and clean the raw datasets to establish reliable, consistent and analytically useful customer and transaction records.
+1. Clean and check the customer, order, product and cost data so that revenue and profit figures can be trusted.
 
-2. Investigate customer purchasing patterns, including purchase frequency, spending behavior, product preferences, seasonality and returns.
+2. Measure how concentrated revenue and profit are across customers, product categories and stores.
 
-3. Engineer customer-level features that summarize historical purchasing behavior without incorporating information from future outcomes.
+3. Group customers into distinct value segments using unsupervised machine learning.
 
-4. Develop a classification model to predict whether a customer will make a qualifying purchase within the next 90 days.
+4. Build a model that flags loss-making orders from basket contents and discounts, and express it as plain discount rules.
 
-5. Develop a regression model to predict customer spending during the next 90 days.
-
-6. Evaluate model performance against appropriate baselines and interpret the results in terms of potential business applications.
-
-7. Develop evidence-based recommendations for customer retention, marketing prioritization and revenue planning.
+5. Estimate the financial impact of acting on the findings, and make evidence-based recommendations.
 
 ## Research Questions
 
 |No.	|Research question	|Analytical approach|
 ----|----|----|
-|1	|How do customers differ in purchasing frequency, spending and product preferences?	|Exploratory data analysis and RFM analysis|
-|2	|Which customer characteristics and historical purchasing patterns are associated with repeat purchasing?	|Statistical analysis and classification|
-|3	|To what extent can historical purchasing behavior predict whether a customer will purchase again within 90 days?	|Classification|
-|4	|To what extent can historical purchasing behavior predict customer spending over the next 90 days?	|Regression|
-|5	|Which historical customer features contribute most to the predictions?	|Model interpretation|
-|6	|How could the findings support customer retention and marketing prioritization?	|Business interpretation|
+|1	|How much of revenue and profit comes from the top 10% and top 20% of customers?	|Exploratory data analysis and Pareto (concentration) analysis|
+|2	|What distinct customer segments exist, and what is each worth?	|Feature engineering, K-Means clustering and segment profiling|
+|3	|How does discount level affect margin in each product category?	|Exploratory data analysis and margin analysis|
+|4	|Which combinations of basket and discount lead to loss-making orders?	|Classification (decision tree) and rule extraction|
+|5	|How much profit would discount limits have protected in 2024?	|Scenario ("what-if") analysis|
 
-One distinction is important: *our predictive models may identify useful associations, but they will not automatically establish that a particular behavior causes a customer to purchase or stop purchasing.*
+One distinction is important: *our models identify patterns and associations in historical data. They do not by themselves prove that a particular behaviour or discount causes a customer to spend more or less.*
 
-### Target Variable Definition
+### Analytical Components
 
-**Target A: Repeat-purchase classification**
+**Component A: Customer value segmentation**
+
+**Problem type:** Unsupervised learning (clustering)
+
+- **Business question:** What distinct groups of customers exist, and how much revenue and profit does each group contribute?
+
+**Unit of analysis:** One record per customer.
+
+**Candidate features:** recency, purchase frequency, total and average spend, profit contributed, share of spend on Electronics, average discount used, and return and cancellation history.
+
+**Output:** A segment label for each customer, a profile of each segment (size, revenue share, profit share, typical behaviour), a plain business name for each segment, and a recommended action for each.
+
+The segments describe customers' historical value. They are intended to guide prioritisation and service levels, not to forecast individual future purchases.
+
+**Component B: Loss-making order detection**
 
 **Problem type:** Binary classification
 
-- **Business question:** Will a customer make at least one qualifying purchase during the 90 days following a defined observation date?
+- **Business question:** Given an order's basket contents and discounts, will that order lose money?
 
 |Target value	|Definition|
 |----|----|
-|1	|At least one qualifying purchase occurs in the next 90 days.|
-|0	|No qualifying purchase occurs in the next 90 days.|
+|1	|The order's total cost exceeds its revenue (negative profit).|
+|0	|The order makes a profit or breaks even.|
 
-The exact rules for qualifying purchases - including treatment of cancelled orders and other order statuses - will be established after inspecting the data.
+**Unit of analysis:** One record per order.
 
-**Target B: Future customer spending**
+**Candidate features:** information known at checkout only, such as product categories and subcategories in the basket, discount levels, number of items, basket value and store.
 
-**Problem type:** Regression
-
-**Business question:** How much qualifying purchase revenue will a customer generate during the following 90 days?
-
-**Target:** The sum of the customer's qualifying order revenue during the future window.
-
-We must first determine whether the appropriate measure is gross sales, discounted sales, or net spending after returns. We must define this consistently before calculating the target.
-
-Both models will have to use the same observation date and future window wherever practical. This will let us compare their findings and maintain a coherent project design.
-
-- For example, if a customer has made five orders before the observation date, those orders may inform the model's features. Orders occurring after that date determine the targets. Those future orders must never be used as predictors.
+The exact rules for which orders to include, such as how to treat cancelled and returned orders, will be set after inspecting the data. Because margin is closely tied to price, cost and discount, we expect high accuracy. The value of this component is in turning the model into clear, auditable discount rules, not in the accuracy score alone.
 
 ### Measure of Success
 
-We won't want to decide that a model is successful simply because it achieves a high accuracy score or produces a small prediction error. We need criteria appropriate to each task.
+We will set the success criteria before modelling, so the results are judged against fixed targets rather than chosen afterwards.
 
 |Component	|Evaluation criteria|
 |----|----|
-|Data preparation	|Key integrity, documented cleaning decisions, valid data types and consistent business rules|
-|Customer behavior analysis	|Reproducible metrics and interpretable findings that answer the research questions|
-|Classification	|Precision, recall, F1-score, ROC-AUC and a confusion matrix; compare against a simple baseline|
-|Regression	|MAE, RMSE and \(R^2\); compare against a baseline prediction|
-|Validation	|Chronological evaluation using only information available before the target period|
-|Business usefulness	|Clear explanation of what predictions can support and where they may be unreliable|
+|Data preparation	|Key integrity, documented cleaning decisions, valid data types, and order-line revenue and cost that reconcile to order totals|
+|Value and margin analysis	|Reproducible metrics and interpretable findings that answer the research questions|
+|Segmentation	|3–6 segments; silhouette score ≥ 0.3; each segment ≥ 5% of customers; segments remain stable when re-run with different random seeds|
+|Loss-making order detection	|Recall ≥ 90% on loss-making orders in the 2024 test period; outperforms a simple "discount ≥ 25%" rule; tree depth ≤ 5 so it reads as rules|
+|Validation	|Chronological split for the classifier: train on 2022–2023 orders, test on 2024 orders|
+|Business impact	|Every recommendation linked to an estimated EGP impact|
 
-We want to establish numerical performance benchmarks after examining the dataset and evaluating baseline models. 
+- For instance, loss-making orders are likely to be a small share of all orders, so a model could reach high accuracy simply by predicting that no order loses money.
 
-- For instance, if repeat purchases are very common, a classifier could achieve high accuracy simply by predicting that nearly everyone will purchase again. 
-
-    - Accuracy alone would therefore be misleading.
-
-- Likewise, a regression model should be evaluated on customers and periods not used to train it.
+    - Accuracy alone would therefore be misleading, which is why recall on loss-making orders and comparison against a simple rule are the main criteria.
 
 ### Project Scope and Deliverables
 
-The initial project scope includes:
+The project scope includes:
 
 - Data inventory and quality assessment.
 
-- Data cleaning and integration across the nine tables.
+- Data cleaning and integration across the nine tables, including checks on cost, discount and margin fields.
 
-- Exploratory customer behavior analysis and RFM metrics.
+- Exploratory analysis of revenue concentration, category margins and discount impact.
 
-- Customer-level feature engineering.
+- Customer-level and order-level feature engineering.
 
-- One primary classification model and one primary regression model, with baseline and alternative models for comparison.
+- Customer value segmentation with K-Means, including selection of the number of segments, profiling and stability checks.
 
-- Model evaluation, interpretation, limitations and business recommendations.
+- A loss-making order classifier with baseline comparison and plain-language rule extraction.
+
+- Scenario analysis of discount limits and business recommendations.
 
 - Reproducible code and documentation suitable for a data science portfolio.
 
-We want to leave advanced techniques, deployment and additional predictive targets out of the initial scope unless the data or our findings provide a compelling reason to expand it.
+Advanced techniques, deployment and additional targets are out of scope unless the data or our findings give a compelling reason to expand.

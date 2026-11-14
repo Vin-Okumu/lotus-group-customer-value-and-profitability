@@ -1,5 +1,5 @@
 <h1 align = "Center">
-Lotus Group Customer Behavior Analysis
+Lotus Group Customer Value & Profitability Analysis
 
 <h3 align = "Center">
 Data Inventory Documentation

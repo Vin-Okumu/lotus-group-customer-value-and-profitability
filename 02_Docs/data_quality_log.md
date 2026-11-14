@@ -1,5 +1,5 @@
 <h1 align = "Center">
-Lotus Group Customer Behavior Analysis
+Lotus Group Customer Value & Profitability Analysis
 
 <h2 align = "Center">
 Data Quality Log
@@ -65,7 +65,7 @@ Our preliminary decision:
 
 * Retain these transactions.
 
-Employee identification is not essential to our primary customer behavior models. We may eventually use employee information for supplementary analysis, but missing employee IDs should not cause us to discard otherwise valid transactions.
+Employee identification is not essential to our customer value and profitability analysis. We may eventually use employee information for supplementary analysis, but missing employee IDs should not cause us to discard otherwise valid transactions.
 
 ## 2. Duplicate-record assessment
 
@@ -106,9 +106,7 @@ For our project, the distinction is particularly important because duplicated cu
 
 - Customer segmentation.
 
-- Repeat-purchase labels.
-
-- Regression predictions.
+- Customer revenue and profit contribution.
 
 We must resolve customer identity before constructing customer-level features.
 
@@ -254,7 +252,7 @@ What this tells us:
 
 - **Returns**: Every return references an existing order.
 
-The missing employee IDs should not cause us to discard those orders. Employee information is not essential to the customer-level classification and regression targets we intend to construct.
+The missing employee IDs should not cause us to discard those orders. Employee information is not essential to the customer segmentation or the loss-making order model.
 
 Preliminary decision: Retain all 632 records, preserve the missing employee IDs, and document the issue. We can investigate whether the missing assignments have any meaningful relationship with store, date, or order status later if necessary.
 
@@ -307,7 +305,7 @@ All 12,000 orders have valid dates, and every transaction's `order_date` agrees 
 |Mismatching dates	|0	|Pass|
 
 
-**Why this matters**: Our future analysis will depend heavily on time. We'll use historical transaction dates to calculate customer purchase frequency, recency, spending patterns, and eventually construct 90-day prediction targets.
+**Why this matters**: Our future analysis will depend heavily on time. We'll use transaction dates to calculate customer recency, purchase frequency and spending patterns, and to split orders chronologically (2022–2023 for training, 2024 for testing) in the loss-making order model.
 
 - If the order dates disagreed with the date dimension, our time-based analysis could become unreliable. Fortunately, there are no inconsistencies.
 
@@ -516,20 +514,18 @@ We can distinguish three situations:
 
 This distinction matters when calculating actual customer spending.
 
-## 3. Preliminary rules for our predictive models
+## 3. Preliminary rules for revenue and profit
 
 Proposed way forward
 
-|Situation	|Classification target	|Regression target|
+|Situation	|Counts as a sale?	|Revenue and profit|
 |---|---|---|
-|Completed order	|Qualifying purchase	|Include revenue|
-|Cancelled order	|Not a qualifying purchase	|Exclude revenue|
-|Returned order	|Requires return treatment	|Deduct qualifying refunds|
-|Pending return	|Purchase initially qualifies	|Don't deduct until refunded|
-|Rejected return	|Purchase initially qualifies	|Don't deduct|
+|Completed order	|Yes	|Include|
+|Cancelled order	|No	|Exclude|
+|Returned order	|Requires return treatment	|Depends on return status|
 
 
-These are preliminary rules. We need one more small investigation before finalizing them.
+These are preliminary rules. We need one more small investigation before finalizing them. The final rules are set in **Final Business Rules for Revenue and Profit** below.
 
 # Checking Whether Rreturn Records Correspond to Returned Orders
 
@@ -543,18 +539,7 @@ No Completed orders were found with associated return records.
 
 ## Proposed way forward
 
-Our preliminary transaction treatment is that for the predictive project, we'll use these principles:
-
-|Order status	|Treatment|
-|---|---|
-|Completed	|Eligible purchase|
-|Cancelled	|Exclude|
-|Returned	|Exclude from qualifying purchases, subject to final return treatment|
-
-
-For regression, we'll want to calculate spending using completed purchases, less successfully refunded amounts where applicable. We don't want to deduct pending or rejected refunds.
-
-One important distinction: the seven returned orders without return records will require special handling because we cannot establish their actual refund amounts.
+The seven returned orders without return records cannot be assigned a refund outcome. They are treated as returned (not a sale) in the final rules below.
 
 # Customer Dates Validation
 
@@ -572,7 +557,79 @@ The customer date fields were assessed for parsing errors and chronological inco
 
 - Registration dates after the final transaction date: 0.
 
-**Conclusion:** Registration dates are suitable for customer-tenure calculations. Invalid birth dates will be converted to missing values during cleaning rather than estimated or artificially reconstructed.
+**Conclusion:** Invalid birth dates will be converted to missing values during cleaning rather than estimated or artificially reconstructed.
+
+Registration dates are valid as dates, but 2,034 orders (17% of revenue) are dated before the customer's registration date. See **Orders Placed Before Customer Registration** below. Customer tenure will therefore be measured from the **first purchase date**, not the registration date.
+
+# Product Margin Structure
+
+**Assessment:** Price and cost consistency between order lines and the product table, and the margin available in each category.
+
+**Findings:**
+
+- Order-line unit prices and unit costs match the product table for all 25,099 lines (0 mismatches).
+
+- No zero or negative prices, costs or quantities. Discounts take only the values 0–30% in 5% steps; quantities range from 1 to 4.
+
+|Category	|Margin before discount (min – max)|
+|---|---|
+|Clothing	|50% – 60%|
+|Electronics	|12.5% – 33%|
+
+**Conclusion:** No correction is required. The margin gap between categories is a key business finding: a discount of 20% or more can remove most or all of an Electronics product's margin, so some discounted Electronics sales are sold at a loss. This is investigated in the exploratory analysis and the loss-making order model.
+
+# Orders Placed Before Customer Registration
+
+**Assessment:** Chronological consistency between order dates and customer registration dates.
+
+**Findings:**
+
+- 2,034 orders (17% of order value, EGP 7.67M) are dated before the customer's registration date.
+
+- All of these orders link to valid customers, products and stores, and their financial values reconcile.
+
+**Decision:** Retain these orders as valid sales. Registration most likely records sign-up to the loyalty programme, which can happen after a first purchase. Excluding them would remove 17% of revenue and understate customer value. Customer tenure will be measured from the first purchase date instead of the registration date.
+
+# Customers Without Purchases
+
+**Findings:**
+
+- 55 of the 3,000 customers have no orders at all.
+
+- A further 37 customers have orders, but all of them were cancelled or refunded.
+
+- In total, 92 customers have no qualifying sale.
+
+**Decision:** Keep all 92 in the customer table with zero revenue and profit. Exclude them from the clustering, because there is no purchase behaviour to segment, and report them separately as **"Registered, never purchased"**.
+
+# Final Business Rules for Revenue and Profit
+
+These rules define a **qualifying sale** and are applied consistently throughout the project.
+
+|Order situation	|Orders	|Order value (EGP)	|Counts as a sale?	|Reason|
+|---|---:|---:|---|---|
+|Completed	|10,442	|39,652,714.00	|Yes	|Goods sold and paid for|
+|Returned, return **rejected**	|87	|403,586.50	|Yes	|Refund refused; the customer kept the goods, so the sale stands|
+|Returned, return **refunded**	|819	|3,206,996.50	|No	|Money returned to the customer|
+|Returned, return **pending**	|150	|402,529.50	|No	|Outcome unknown; excluded as the cautious option|
+|Returned, **no return record**	|7	|—	|No	|Refund outcome cannot be established|
+|Cancelled	|495	|1,677,927.50	|No	|No money changed hands; the value is booked, not earned|
+
+**Definitions:**
+
+- **Revenue** = sum of `line_total_revenue` for qualifying sales.
+
+- **Cost** = sum of `line_total_cost` for qualifying sales.
+
+- **Profit** = Revenue − Cost. **Margin** = Profit ÷ Revenue.
+
+- **Loss-making order** = a qualifying order whose cost exceeds its revenue.
+
+Returned goods are assumed to go back into stock, so excluded returned orders carry neither revenue nor cost.
+
+**Sensitivity:** if every pending return were later rejected, qualifying revenue would rise by EGP 0.40M (about 1%). This is too small to change the findings.
+
+**Output:** `01_Data/processed/sales_clean.csv`, one row per product line of every qualifying sale, with revenue, cost, profit and margin.
 
 # Data Quality Assessment Summary
 
@@ -581,14 +638,20 @@ We've now completed the checks necessary to establish whether our data is suitab
 Our key findings include:
 
 |Issue	|Finding	|Planned treatment|
+|---|---|---|
 |Duplicate customers	|50 duplicated records	|Remove exact duplicates, retaining one record per customer.|
 |Missing customer emails	|382	|Retain missing values.|
-|Missing employee IDs	|632 orders	|Retain; not essential for customer modelling.|
+|Missing employee IDs	|632 orders	|Retain; not essential for this analysis.|
 |Inconsistent gender capitalization	|Identified	|Standardize categories.|
 |Whitespace in payment methods	|Identified	|Remove leading/trailing whitespace.|
 |Invalid birth dates	|567	|Convert to missing values.|
-|Missing return records	|7 returned orders	|Flag for special handling.|
+|Missing return records	|7 returned orders	|Treat as returned; not a sale.|
 |Transaction arithmetic	|No mismatches	|No correction required.|
 |Order-level financial reconciliation	|No mismatches	|No correction required.|
 |Foreign-key integrity	|No unmatched populated keys	|No correction required.|
 |Date consistency	|No mismatches	|No correction required.|
+|Product price and cost consistency	|No mismatches	|No correction required.|
+|Orders before customer registration	|2,034 orders (17% of value)	|Retain as valid sales; measure tenure from first purchase.|
+|Customers without a qualifying sale	|92 (55 with no orders)	|Keep; exclude from clustering and report separately.|
+|Cancelled orders	|495 (EGP 1.68M booked)	|Exclude from sales.|
+|Returned orders	|1,063	|Rejected returns count as sales; refunded, pending and unrecorded returns do not.|
