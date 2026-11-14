@@ -71,6 +71,8 @@ Audit → Clean → Explore → Engineer features → Segment customers → Dete
 
 **Tools:** Python · pandas · NumPy · scikit-learn · Matplotlib · Jupyter · Git/GitHub
 
+📊 **Non-technical summary:** a 6-slide deck is in [`04_Output/reports/`](04_Output/reports/Lotus_Group_Customer_Value_Profitability.pptx).
+
 ---
 
 ## 4. Results
@@ -190,7 +192,7 @@ lotus-group-customer-behavior-analysis/
 │   ├── 05_customer_segmentation.ipynb
 │   ├── 06_loss_making_orders.ipynb
 │   └── 07_business_impact.ipynb
-├── 04_Src/               # Reserved for reusable code
+├── 04_Output/reports/     # Slide deck summarising the project for non-technical audiences
 ├── 05_Images/            # Cover and charts used in this README
 ├── 06_Models/            # Saved decision tree, created by notebook 06
 ├── requirements.txt
