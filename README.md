@@ -177,7 +177,7 @@ Run the notebooks in `03_Notebooks/` **in order, `01` → `07`**. Starting from 
 ### Repository structure
 
 ```
-lotus-group-customer-value-&-profitability-analysis/
+lotus-group-customer-value-and-profitability-analysis/
 ├── 01_Data/
 │   ├── raw/              # 9 source CSV tables
 │   ├── processed/        # Cleaned tables, created by notebook 02
