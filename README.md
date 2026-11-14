@@ -71,7 +71,7 @@ Audit → Clean → Explore → Engineer features → Segment customers → Dete
 
 **Tools:** Python · pandas · NumPy · scikit-learn · Matplotlib · Jupyter · Git/GitHub
 
-📊 **Non-technical summary:** a 6-slide deck is in [`04_Output/reports/`](04_Output/reports/Lotus_Group_Customer_Value_Profitability.pptx).
+**Non-technical summary:** a 6-slide deck is in [`04_Output`](04_Output/Lotus_Group_Customer_Value_Profitability.pptx).
 
 ---
 
@@ -157,7 +157,7 @@ In plain language: **ask for manager approval when an Electronics item is discou
 **Requirements:** Python 3.10+
 
 ```bash
-git clone https://github.com/Vin-Okumu/lotus-group-customer-behavior-analysis.git
+git clone https://github.com/Vin-Okumu/lotus-group-customer-value-and-profitability.git
 cd lotus-group-customer-behavior-analysis
 pip install -r requirements.txt
 jupyter notebook
@@ -177,7 +177,7 @@ Run the notebooks in `03_Notebooks/` **in order, `01` → `07`**. Starting from 
 ### Repository structure
 
 ```
-lotus-group-customer-behavior-analysis/
+lotus-group-customer-value-&-profitability-analysis/
 ├── 01_Data/
 │   ├── raw/              # 9 source CSV tables
 │   ├── processed/        # Cleaned tables, created by notebook 02
@@ -192,7 +192,7 @@ lotus-group-customer-behavior-analysis/
 │   ├── 05_customer_segmentation.ipynb
 │   ├── 06_loss_making_orders.ipynb
 │   └── 07_business_impact.ipynb
-├── 04_Output/reports/     # Slide deck summarising the project for non-technical audiences
+├── 04_Output/            # Slide deck summarising the project for non-technical audiences
 ├── 05_Images/            # Cover and charts used in this README
 ├── 06_Models/            # Saved decision tree, created by notebook 06
 ├── requirements.txt
